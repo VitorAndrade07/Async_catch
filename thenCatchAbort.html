@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Then e catch</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <h1>Then e Catch usando AbortController</h1>
+    <p>Nesta demonstração, vamos tratar do uso encadeado do then/catch para resolução de Promises usando um AbortController para evitar respostas consecutivas de chamadas de função que deveriam ter sido canceladas.</p>
+
+    <form action="">
+        <label for="nomeRepositorio">Nome do repositório</label>
+        <input type="text" id="nomeRepositorio" onkeyup="validarNomeRepositorio()" required autofocus>
+        <output id="outputNomeRepositorio"></output>
+        <br><br> <label for="senhaRepositorio">Digite sua senha</label>
+        <input type="password" id="senhaRepositorio" onkeyup="validarSenhaRepositorio()" required>
+        <output id="outputSenhaRepositorio"></output>
+    </form>
+    <script>
+        const outputNomeRepositorio = document.getElementById('outputNomeRepositorio');
+        const outputSenhaRepositorio = document.getElementById('outputSenhaRepositorio');
+        const repositoriosExistentes = ["api-com-fastapi", "pagina-cidade", "cadastro-vingadores"];
+
+        function criarValidadores(){
+            let controller = new AbortController();
+
+            function verificarNomeRepositorioDisponivel(nome, signal){
+                return new Promise((resolve, reject) => {
+                    const atraso = setTimeout(() => {
+                        if (signal.aborted) {
+                            return;
+                        }
+                        if(repositoriosExistentes.includes(nome.toLowerCase())){
+                            reject(`❌ O repositório "${nome}" já existe. Escolha outro nome.`);
+                        } else {
+                            resolve(`✅ O nome "${nome}" está disponível.`);
+                        }
+                    }, 1000);
+                    signal.addEventListener("abort", () => clearTimeout(atraso));
+                });
+            }
+
+            function validarNomeRepositorio(){
+                const nomeRepositorio = document.getElementById('nomeRepositorio').value.trim();
+                outputNomeRepositorio.innerHTML = ""; // Limpa antes de validar
+
+                if (nomeRepositorio.length < 3){
+                    outputNomeRepositorio.innerText = "O nome do repositório deve ter pelo menos 3 caracteres";
+                    return;
+                }
+
+                controller.abort();
+                controller = new AbortController();
+
+                verificarNomeRepositorioDisponivel(nomeRepositorio, controller.signal)
+                    .then(mensagem => outputNomeRepositorio.innerHTML = mensagem)
+                    .catch(erro => {
+                        if (erro.name !== 'AbortError') {
+                            outputNomeRepositorio.innerHTML = erro;
+                        }
+                    });
+            }
+
+            // Sua função validarSenhaRepositorio
+            // Removi 'async' e 'const senha = ++senhaAtual;' pois não são necessários para estas validações síncronas
+            function validarSenhaRepositorio(){
+                const senhaRepositorio = document.getElementById('senhaRepositorio').value; // Use getElementById para consistência
+
+                outputSenhaRepositorio.innerHTML = ""; // Limpa a mensagem anterior da senha
+
+                if(senhaRepositorio.length < 8){
+                    outputSenhaRepositorio.innerText = "❌ A sua senha deve ter no mínimo 8 caracteres";
+                    return; // Para a execução da função aqui
+                }
+
+                // Adicione as outras validações da tarefa aqui:
+                // -> A senha deve possuir pelo menos um número
+                if (!/\d/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerText = "❌ A sua senha deve possuir pelo menos um número";
+                    return;
+                }
+                // -> A senha deve ter pelo menos uma letra maiúscula
+                if (!/[A-Z]/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerText = "❌ A sua senha deve ter pelo menos uma letra maiúscula";
+                    return;
+                }
+                // -> A senha deve ter pelo menos um caracter especial (!@#&*()[]{}~.)
+                if (!/[!@#&*()\[\]{}~.]/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerText = "❌ A sua senha deve ter pelo menos um caractere especial (!@#&*()[]{}~.)";
+                    return;
+                }
+
+                // Se todas as validações passarem
+                outputSenhaRepositorio.innerText = "✅ Senha forte e válida!";
+            }
+            
+            // ESSA É A PARTE CHAVE: Retorne AMBAS as funções em um objeto
+            return {
+                validarNomeRepositorio: validarNomeRepositorio,
+                validarSenhaRepositorio: validarSenhaRepositorio // Agora a função da senha é retornada!
+            };
+        }
+        
+        // Atribua as funções retornadas pela criarValidadores às variáveis globais
+        const validadores = criarValidadores();
+        const validarNomeRepositorio = validadores.validarNomeRepositorio;
+        const validarSenhaRepositorio = validadores.validarSenhaRepositorio; // AGORA ESSA LINHA ATRIBUI A FUNÇÃO CORRETA
+
+    </script>
+</body>
+</html>

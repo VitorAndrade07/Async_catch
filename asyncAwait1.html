@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Execução de uma operação</h1>
+    <button type="button" onclick="">Executar Operação</button>
+    <br>
+    <output>
+        <p>Lorem ipsum dolor sit amet.</p>
+    </output>
+    <script>
+        const output = document.querySelector('output');
+        console.log(`O que tem dentro de "output": \n`);
+        console.log(output);
+
+        const minhaFuncaoAssincrona = async () => {
+            return new Promise((resolve, reject) => {
+                // Simulando uma "assíncrona", uma tarefa que demora para responder
+                //setTimeout(() => resolve("Tarefa assíncrona concluída!"), 2000);
+                setTimeout(() => reject("❌A tarefa assíncrona falhou!"), 2000);
+            });
+        }
+        async function ExecutarOperacao(){
+            output.innerText = "Executando tarefa...";
+            try{
+                const resultado = minhaFuncaoAssincrona();
+                output.innerText += `<br>${resultado}`;
+            } catch (erro) {
+                output.innerText += `<br>${erro}`;
+            }
+        }
+    </script>
+</body>
+</html>

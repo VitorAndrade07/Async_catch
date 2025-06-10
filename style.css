@@ -1,0 +1,47 @@
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+label,
+input[type="text"],
+input[type="password"],
+output {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+label {
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+output {
+    padding: 5px;
+    font-size: 0.9em;
+    min-height: 20px;
+    text-align: left;
+}
+
+#outputNomeRepositorio {
+    color: blue;
+}
+
+#outputSenhaRepositorio {
+    color: red;
+}
