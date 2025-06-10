@@ -44,7 +44,7 @@
 
             function validarNomeRepositorio(){
                 const nomeRepositorio = document.getElementById('nomeRepositorio').value.trim();
-                outputNomeRepositorio.innerHTML = ""; // Limpa antes de validar
+                outputNomeRepositorio.innerHTML = ""; 
 
                 if (nomeRepositorio.length < 3){
                     outputNomeRepositorio.innerText = "O nome do repositório deve ter pelo menos 3 caracteres";
@@ -62,51 +62,42 @@
                         }
                     });
             }
-
-            // Sua função validarSenhaRepositorio
-            // Removi 'async' e 'const senha = ++senhaAtual;' pois não são necessários para estas validações síncronas
             function validarSenhaRepositorio(){
-                const senhaRepositorio = document.getElementById('senhaRepositorio').value; // Use getElementById para consistência
+                const senhaRepositorio = document.getElementById('senhaRepositorio').value;
 
-                outputSenhaRepositorio.innerHTML = ""; // Limpa a mensagem anterior da senha
+                outputSenhaRepositorio.innerHTML = ""; 
 
                 if(senhaRepositorio.length < 8){
                     outputSenhaRepositorio.innerText = "❌ A sua senha deve ter no mínimo 8 caracteres";
-                    return; // Para a execução da função aqui
+                    return; 
                 }
 
-                // Adicione as outras validações da tarefa aqui:
-                // -> A senha deve possuir pelo menos um número
                 if (!/\d/.test(senhaRepositorio)) {
                     outputSenhaRepositorio.innerText = "❌ A sua senha deve possuir pelo menos um número";
                     return;
                 }
-                // -> A senha deve ter pelo menos uma letra maiúscula
                 if (!/[A-Z]/.test(senhaRepositorio)) {
                     outputSenhaRepositorio.innerText = "❌ A sua senha deve ter pelo menos uma letra maiúscula";
                     return;
                 }
-                // -> A senha deve ter pelo menos um caracter especial (!@#&*()[]{}~.)
+                
                 if (!/[!@#&*()\[\]{}~.]/.test(senhaRepositorio)) {
                     outputSenhaRepositorio.innerText = "❌ A sua senha deve ter pelo menos um caractere especial (!@#&*()[]{}~.)";
                     return;
                 }
 
-                // Se todas as validações passarem
                 outputSenhaRepositorio.innerText = "✅ Senha forte e válida!";
             }
             
-            // ESSA É A PARTE CHAVE: Retorne AMBAS as funções em um objeto
             return {
                 validarNomeRepositorio: validarNomeRepositorio,
-                validarSenhaRepositorio: validarSenhaRepositorio // Agora a função da senha é retornada!
+                validarSenhaRepositorio: validarSenhaRepositorio 
             };
         }
         
-        // Atribua as funções retornadas pela criarValidadores às variáveis globais
         const validadores = criarValidadores();
         const validarNomeRepositorio = validadores.validarNomeRepositorio;
-        const validarSenhaRepositorio = validadores.validarSenhaRepositorio; // AGORA ESSA LINHA ATRIBUI A FUNÇÃO CORRETA
+        const validarSenhaRepositorio = validadores.validarSenhaRepositorio;
 
     </script>
 </body>
